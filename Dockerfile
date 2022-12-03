@@ -148,7 +148,7 @@ RUN chown -R gleez:gleez /home/gleez/.ssh \
  && chmod 700 /home/gleez/.ssh \
  && chmod 600 /home/gleez/.ssh/* \
  && mkdir -p /var/run/watchman/gleez-state \
- && chown -R gleez:gleez /var/run/watchman/gleez-state \
+ && chown -R gleez:gleez /var/run/watchman/gleez-state
  
 WORKDIR /home/workspace/
 
