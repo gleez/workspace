@@ -43,7 +43,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # ENV LANG=en_US.UTF-8
 
+ARG NODE_VERSION
 ARG RELEASE_TAG
+
 ARG RELEASE_ORG="gitpod-io"
 ARG OPENVSCODE_SERVER_ROOT="/home/.openvscode-server"
 
@@ -101,9 +103,33 @@ RUN sudo echo "Running 'sudo' for Gleez: success" && \
     # create a completions dir for gleez user
     mkdir -p /home/gleez/.local/share/bash-completion/completions
 
+ENV NODE_VERSION=${NODE_VERSION}
+
+ENV PNPM_HOME=/home/gleez/.pnpm
+ENV PATH=/home/gleez/.nvm/versions/node/v${NODE_VERSION}/bin:/home/gleez/.yarn/bin:${PNPM_HOME}:$PATH
+
+RUN curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | PROFILE=/dev/null bash \
+    && bash -c ". .nvm/nvm.sh \
+        && nvm install v${NODE_VERSION} \
+        && nvm alias default v${NODE_VERSION} \
+        && npm install -g typescript yarn pnpm node-gyp" \
+    && echo ". ~/.nvm/nvm-lazy.sh"  >> /home/gleez/.bashrc.d/50-node
+# above, we are adding the lazy nvm init to .bashrc, because one is executed on interactive shells, the other for non-interactive shells (e.g. plugin-host)
+COPY --chown=gleez:gleez nvm-lazy.sh /home/gleez/.nvm/nvm-lazy.sh
+
 # Custom PATH additions
 ENV PATH=$HOME/.local/bin:/usr/games:$PATH
 
+# Configure SSH to use Bash with colors by default.
+RUN chown -R gleez:gleez /home/gleez/.ssh \
+ && touch /home/gleez/.ssh/authorized_keys \
+ && touch /home/gleez/.ssh/config \
+ && echo "SHELL=/bin/bash\nTERM=xterm-256color" >> /home/gleez/.ssh/environment \
+ && chmod 700 /home/gleez/.ssh \
+ && chmod 600 /home/gleez/.ssh/* \
+ && mkdir -p /var/run/watchman/gleez-state \
+ && chown -R gleez:gleez /var/run/watchman/gleez-state \
+ 
 WORKDIR /home/workspace/
 
 ENV LANG=C.UTF-8 \
