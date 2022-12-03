@@ -81,6 +81,7 @@ RUN groupadd --gid $USER_GID $USERNAME \
 RUN chmod g+rw /home && \
     mkdir -p /home/workspace && \
     chown -R $USERNAME:$USERNAME /home/workspace && \
+    chown -R $USERNAME:$USERNAME /home/gleez && \
     chown -R $USERNAME:$USERNAME ${OPENVSCODE_SERVER_ROOT}
     
 ENV HOME=/home/gleez
