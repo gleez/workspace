@@ -28,6 +28,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         zsh \
         libatomic1 \
         git \
+        openssh-client \
+        openssh-server \
+        mysql-server \
+        mysql-client \
+        postgresql-12 \
+        postgresql-contrib-12 \
     && locale-gen en_US.UTF-8
 
 ENV LANG=en_US.UTF-8
@@ -36,13 +42,18 @@ ENV LANG=en_US.UTF-8
 # RUN add-apt-repository -y ppa:git-core/ppa
 # RUN apt-get update && apt-get install -y --no-install-recommends git git-lfs
 
+ARG USERNAME=gleez
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
 ### Gleez user ###
 # '-l': see https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
-RUN useradd -l -u 33333 -G sudo -md /home/gleez -s /bin/bash -p gleez gleez \
+RUN groupadd --gid $USER_GID $USERNAME \
+    useradd -l -u 1000 -G sudo -G $USERNAME -md /home/$USERNAME -s /bin/bash -p $USERNAME $USERNAME \
     # passwordless sudo for users in the 'sudo' group
     && sed -i.bkp -e 's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers \
     # To emulate the workspace-session behavior within dazzle build env
-    && mkdir /workspace && chown -hR gleez:gleez /workspace
+    && mkdir /workspace && chown -hR $USERNAME:$USERNAME /workspace
 
 ENV HOME=/home/gleez
 WORKDIR $HOME
