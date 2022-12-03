@@ -74,7 +74,7 @@ ARG USER_GID=$USER_UID
 ### Gleez user ###
 # '-l': see https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
 RUN groupadd --gid $USER_GID $USERNAME \
-    useradd -l -u 1000 -G sudo --gid $USERNAME -md /home/gleez -s /bin/bash -p $USERNAME $USERNAME \
+    && useradd -l -u 1000 -G sudo --gid $USERNAME -md /home/gleez -s /bin/bash -p $USERNAME $USERNAME \
     # passwordless sudo for users in the 'sudo' group
     && sed -i.bkp -e 's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers
 
