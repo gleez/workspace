@@ -109,12 +109,14 @@ RUN mkdir -p /home/gleez/.ssh \
 ### Gleez user (2) ###
 USER gleez
 # use sudo so that user does not get sudo usage info on (the first) login
-RUN sudo echo "Running 'sudo' for Gleez: success" && \
+RUN sudo echo "Running 'sudo' for Gleez: success" \
     # create .bashrc.d folder and source it in the bashrc
-    mkdir -p /home/gleez/.bashrc.d && \
-    (echo; echo "for i in \$(ls -A \$HOME/.bashrc.d/); do source \$HOME/.bashrc.d/\$i; done"; echo) >> /home/gleez/.bashrc && \
+    && mkdir -p /home/gleez/.bashrc.d \
+    && (echo; echo "for i in \$(ls -A \$HOME/.bashrc.d/); do source \$HOME/.bashrc.d/\$i; done"; echo) >> /home/gleez/.bashrc \
     # create a completions dir for gleez user
-    mkdir -p /home/gleez/.local/share/bash-completion/completions
+    && mkdir -p /home/gleez/.local/share/bash-completion/completions \
+    && git config --global user.email "hello@gleez.tech" \
+    && git config --global user.name "Gleez Technologies"
 
 ENV NODE_VERSION=${NODE_VERSION}
 
