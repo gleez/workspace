@@ -100,6 +100,8 @@ RUN mkdir -p /home/gleez/.ssh \
  && echo "SHELL=/bin/bash\nTERM=xterm-256color" >> /home/gleez/.ssh/environment \
  && chmod 700 /home/gleez/.ssh \
  && chmod 600 /home/gleez/.ssh/* \
+ && mkdir -p /workspace \
+ && chown -R gleez:gleez /workspace \
  && mkdir -p /var/run/watchman/gleez-state \
  && chown -R gleez:gleez /var/run/watchman/gleez-state
 
@@ -130,7 +132,7 @@ COPY --chown=gleez:gleez nvm-lazy.sh /home/gleez/.nvm/nvm-lazy.sh
 ENV GO_VERSION=${GO_VERSION}
 ENV GOPATH=$HOME/go-packages
 ENV GOROOT=$HOME/go
-ENV PATH=$GOROOT/bin:$GOPATH/bin:$PATH
+ENV PATH=$GOROOT/bin:$GOPATH/bin:/home/gleez/bin:$PATH
 
 RUN curl -fsSL https://dl.google.com/go/go$GO_VERSION.linux-amd64.tar.gz | tar xzs && \
 # install VS Code Go tools for use with gopls as per https://github.com/golang/vscode-go/blob/master/docs/tools.md
@@ -146,7 +148,7 @@ RUN curl -fsSL https://dl.google.com/go/go$GO_VERSION.linux-amd64.tar.gz | tar x
     go install -v golang.org/x/tools/gopls@latest && \
     go install -v honnef.co/go/tools/cmd/staticcheck@latest && \
     sudo rm -rf $GOPATH/src $GOPATH/pkg $HOME/.cache/go $HOME/.cache/go-build && \
-    printf '%s\n' 'export GOPATH=/workspace/go' \
+    printf '%s\n' 'export GOPATH=$HOME/go' \
                   'export PATH=$GOPATH/bin:$PATH' > $HOME/.bashrc.d/300-go
 
 WORKDIR /home/workspace/
