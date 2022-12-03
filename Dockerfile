@@ -76,7 +76,9 @@ ARG USER_GID=$USER_UID
 RUN groupadd --gid $USER_GID $USERNAME \
     && useradd -l -u 1000 -G sudo --gid $USERNAME -md /home/gleez -s /bin/bash -p $USERNAME $USERNAME \
     # passwordless sudo for users in the 'sudo' group
-    && sed -i.bkp -e 's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers
+    && sed -i.bkp -e 's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers \
+    # To emulate the workspace-session behavior within dazzle build env
+    && mkdir /workspace && chown -hR gleez:gleez /workspace
 
 RUN chmod g+rw /home && \
     mkdir -p /home/workspace && \
@@ -100,7 +102,6 @@ RUN mkdir -p /home/gleez/.ssh \
  && echo "SHELL=/bin/bash\nTERM=xterm-256color" >> /home/gleez/.ssh/environment \
  && chmod 700 /home/gleez/.ssh \
  && chmod 600 /home/gleez/.ssh/* \
- && mkdir -p /workspace \
  && chown -R gleez:gleez /workspace \
  && mkdir -p /var/run/watchman/gleez-state \
  && chown -R gleez:gleez /var/run/watchman/gleez-state
@@ -148,7 +149,7 @@ RUN curl -fsSL https://dl.google.com/go/go$GO_VERSION.linux-amd64.tar.gz | tar x
     go install -v golang.org/x/tools/gopls@latest && \
     go install -v honnef.co/go/tools/cmd/staticcheck@latest && \
     sudo rm -rf $GOPATH/src $GOPATH/pkg $HOME/.cache/go $HOME/.cache/go-build && \
-    printf '%s\n' 'export GOPATH=$HOME/go' \
+    printf '%s\n' 'export GOPATH=/workspace/go' \
                   'export PATH=$GOPATH/bin:$PATH' > $HOME/.bashrc.d/300-go
 
 WORKDIR /home/workspace/
