@@ -92,6 +92,17 @@ RUN { echo && echo "PS1='\[\033[01;32m\]\u\[\033[00m\] \[\033[01;34m\]\w\[\033[0
 COPY default.gitconfig /etc/gitconfig
 COPY --chown=gleez:gleez default.gitconfig /home/gleez/.gitconfig
 
+# Configure SSH to use Bash with colors by default.
+RUN mkdir -p /home/gleez/.ssh \
+ && chown -R gleez:gleez /home/gleez/.ssh \
+ && touch /home/gleez/.ssh/authorized_keys \
+ && touch /home/gleez/.ssh/config \
+ && echo "SHELL=/bin/bash\nTERM=xterm-256color" >> /home/gleez/.ssh/environment \
+ && chmod 700 /home/gleez/.ssh \
+ && chmod 600 /home/gleez/.ssh/* \
+ && mkdir -p /var/run/watchman/gleez-state \
+ && chown -R gleez:gleez /var/run/watchman/gleez-state
+
 ### Gleez user (2) ###
 USER gleez
 # use sudo so that user does not get sudo usage info on (the first) login
@@ -137,21 +148,7 @@ RUN curl -fsSL https://dl.google.com/go/go$GO_VERSION.linux-amd64.tar.gz | tar x
     sudo rm -rf $GOPATH/src $GOPATH/pkg $HOME/.cache/go $HOME/.cache/go-build && \
     printf '%s\n' 'export GOPATH=/workspace/go' \
                   'export PATH=$GOPATH/bin:$PATH' > $HOME/.bashrc.d/300-go
- 
-# Custom PATH additions
-ENV PATH=$HOME/.local/bin:/usr/games:$PATH
 
-# Configure SSH to use Bash with colors by default.
-RUN mkdir -p /home/gleez/.ssh \
- && chown -R gleez:gleez /home/gleez/.ssh \
- && touch /home/gleez/.ssh/authorized_keys \
- && touch /home/gleez/.ssh/config \
- && echo "SHELL=/bin/bash\nTERM=xterm-256color" >> /home/gleez/.ssh/environment \
- && chmod 700 /home/gleez/.ssh \
- && chmod 600 /home/gleez/.ssh/* \
- && mkdir -p /var/run/watchman/gleez-state \
- && chown -R gleez:gleez /var/run/watchman/gleez-state
- 
 WORKDIR /home/workspace/
 
 ENV LANG=C.UTF-8 \
@@ -159,7 +156,8 @@ ENV LANG=C.UTF-8 \
     EDITOR=code \
     VISUAL=code \
     GIT_EDITOR="code --wait" \
-    OPENVSCODE_SERVER_ROOT=${OPENVSCODE_SERVER_ROOT}
+    OPENVSCODE_SERVER_ROOT=${OPENVSCODE_SERVER_ROOT} \
+    PATH=$HOME/.local/bin:/usr/games:$PATH
   
   # Default exposed port if none is specified
 EXPOSE 3000 8080 8081 8082 8083 8084 8085
