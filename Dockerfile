@@ -36,9 +36,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         openssh-server \
         mysql-server \
         mysql-client \
-        postgresql-12 \
-        postgresql-contrib-12 \
-        iputils \
         net-tools \
         tzdata \
         ca-certificates \
