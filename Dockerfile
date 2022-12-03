@@ -141,7 +141,8 @@ RUN curl -fsSL https://dl.google.com/go/go$GO_VERSION.linux-amd64.tar.gz | tar x
 ENV PATH=$HOME/.local/bin:/usr/games:$PATH
 
 # Configure SSH to use Bash with colors by default.
-RUN chown -R gleez:gleez /home/gleez/.ssh \
+RUN mkdir -p /home/gleez/.ssh \
+ && chown -R gleez:gleez /home/gleez/.ssh \
  && touch /home/gleez/.ssh/authorized_keys \
  && touch /home/gleez/.ssh/config \
  && echo "SHELL=/bin/bash\nTERM=xterm-256color" >> /home/gleez/.ssh/environment \
