@@ -76,9 +76,7 @@ ARG USER_GID=$USER_UID
 RUN groupadd --gid $USER_GID $USERNAME \
     useradd -l -u 1000 -G sudo -G $USERNAME -md /home/$USERNAME -s /bin/bash -p $USERNAME $USERNAME \
     # passwordless sudo for users in the 'sudo' group
-    && sed -i.bkp -e 's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers \
-    # To emulate the workspace-session behavior within dazzle build env
-    && mkdir /workspace && chown -hR $USERNAME:$USERNAME /workspace
+    && sed -i.bkp -e 's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers
 
 RUN chmod g+rw /home && \
     mkdir -p /home/workspace && \
