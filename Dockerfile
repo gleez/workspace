@@ -34,14 +34,39 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         mysql-client \
         postgresql-12 \
         postgresql-contrib-12 \
+        iputils \
+        net-tools \
+        tzdata \
+        ca-certificates \
+        protobuf-compiler \
     && locale-gen en_US.UTF-8
 
-ENV LANG=en_US.UTF-8
+# ENV LANG=en_US.UTF-8
 
-### Git ###
-# RUN add-apt-repository -y ppa:git-core/ppa
-# RUN apt-get update && apt-get install -y --no-install-recommends git git-lfs
+ARG RELEASE_TAG
+ARG RELEASE_ORG="gitpod-io"
+ARG OPENVSCODE_SERVER_ROOT="/home/.openvscode-server"
 
+# Downloading the latest VSC Server release and extracting the release archive
+# Rename `openvscode-server` cli tool to `code` for convenience
+RUN if [ -z "${RELEASE_TAG}" ]; then \
+        echo "The RELEASE_TAG build arg must be set." >&2 && \
+        exit 1; \
+    fi && \
+    arch=$(uname -m) && \
+    if [ "${arch}" = "x86_64" ]; then \
+        arch="x64"; \
+    elif [ "${arch}" = "aarch64" ]; then \
+        arch="arm64"; \
+    elif [ "${arch}" = "armv7l" ]; then \
+        arch="armhf"; \
+    fi && \
+    wget https://github.com/${RELEASE_ORG}/openvscode-server/releases/download/${RELEASE_TAG}/${RELEASE_TAG}-linux-${arch}.tar.gz && \
+    tar -xzf ${RELEASE_TAG}-linux-${arch}.tar.gz && \
+    mv -f ${RELEASE_TAG}-linux-${arch} ${OPENVSCODE_SERVER_ROOT} && \
+    cp ${OPENVSCODE_SERVER_ROOT}/bin/remote-cli/openvscode-server ${OPENVSCODE_SERVER_ROOT}/bin/remote-cli/code && \
+    rm -f ${RELEASE_TAG}-linux-${arch}.tar.gz
+ 
 ARG USERNAME=gleez
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
@@ -55,6 +80,11 @@ RUN groupadd --gid $USER_GID $USERNAME \
     # To emulate the workspace-session behavior within dazzle build env
     && mkdir /workspace && chown -hR $USERNAME:$USERNAME /workspace
 
+RUN chmod g+rw /home && \
+    mkdir -p /home/workspace && \
+    chown -R $USERNAME:$USERNAME /home/workspace && \
+    chown -R $USERNAME:$USERNAME ${OPENVSCODE_SERVER_ROOT}
+    
 ENV HOME=/home/gleez
 WORKDIR $HOME
 # custom Bash prompt
@@ -62,9 +92,6 @@ RUN { echo && echo "PS1='\[\033[01;32m\]\u\[\033[00m\] \[\033[01;34m\]\w\[\033[0
 
 COPY default.gitconfig /etc/gitconfig
 COPY --chown=gleez:gleez default.gitconfig /home/gleez/.gitconfig
-
-# configure git-lfs
-# RUN git lfs install --system --skip-repo
 
 ### Gleez user (2) ###
 USER gleez
@@ -78,3 +105,17 @@ RUN sudo echo "Running 'sudo' for Gleez: success" && \
 
 # Custom PATH additions
 ENV PATH=$HOME/.local/bin:/usr/games:$PATH
+
+WORKDIR /home/workspace/
+
+ENV LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    EDITOR=code \
+    VISUAL=code \
+    GIT_EDITOR="code --wait" \
+    OPENVSCODE_SERVER_ROOT=${OPENVSCODE_SERVER_ROOT}
+  
+  # Default exposed port if none is specified
+EXPOSE 3000 8080 8081 8082 8083 8084 8085
+
+ENTRYPOINT [ "/bin/sh", "-c", "exec ${OPENVSCODE_SERVER_ROOT}/bin/openvscode-server --host 0.0.0.0 \"${@}\"", "--" ]
