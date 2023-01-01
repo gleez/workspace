@@ -162,7 +162,7 @@ ENV LANG=C.UTF-8 \
     VISUAL=code \
     GIT_EDITOR="code --wait" \
     OPENVSCODE_SERVER_ROOT=${OPENVSCODE_SERVER_ROOT} \
-    PATH=$HOME/.local/bin:/usr/games:$PATH
+    PATH=$HOME/.local/bin:/usr/games:/home/workspace/bin:$PATH
   
   # Default exposed port if none is specified
 EXPOSE 3000 8080 8081 8082 8083 8084 8085
