@@ -81,7 +81,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            RELEASE_TAG=openvscode-server-v1.76.0
+            RELEASE_TAG=openvscode-server-v1.76.2
             GO_VERSION=1.20.2
             NODE_VERSION=18.15.0
 
