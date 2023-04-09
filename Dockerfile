@@ -38,6 +38,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         mysql-server \
         mysql-client \
         net-tools \
+        dnsutils \
         tzdata \
         ca-certificates \
         protobuf-compiler \
