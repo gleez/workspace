@@ -6,8 +6,8 @@ name: Docker
 # documentation.
 
 on:
-  schedule:
-    - cron: '16 6 * * *'
+#   schedule:
+#     - cron: '16 6 * * *'
   push:
     branches: [ "master" ]
     # Publish semver tags as releases.
@@ -81,7 +81,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            RELEASE_TAG=openvscode-server-v1.78.0
+            RELEASE_TAG=openvscode-server-v1.78.1
             GO_VERSION=1.20.4
             NODE_VERSION=18.16.0
 
