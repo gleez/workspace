@@ -1,4 +1,4 @@
-FROM buildpack-deps:22.04-curl
+FROM buildpack-deps:23.04-curl
 
 ARG NODE_VERSION
 ARG GO_VERSION
