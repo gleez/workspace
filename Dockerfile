@@ -33,6 +33,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         zsh \
         libatomic1 \
         git \
+        pip \
+        poppler-utils \
         openssh-client \
         openssh-server \
         mysql-server \
