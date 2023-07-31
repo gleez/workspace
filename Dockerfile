@@ -44,6 +44,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         tzdata \
         ca-certificates \
         protobuf-compiler \
+        llvm-dev \
+        libclang-dev \
+        clang \
     && locale-gen en_US.UTF-8
 
 # ENV LANG=en_US.UTF-8
