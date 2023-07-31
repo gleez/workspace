@@ -47,6 +47,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         llvm-dev \
         libclang-dev \
         clang \
+        libssl-dev \
+        pkg-config \
     && locale-gen en_US.UTF-8
 
 # ENV LANG=en_US.UTF-8
