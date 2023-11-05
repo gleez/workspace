@@ -81,9 +81,9 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            RELEASE_TAG=openvscode-server-v1.83.0
+            RELEASE_TAG=openvscode-server-v1.84.0
             GO_VERSION=1.21.3
-            NODE_VERSION=18.18.2
+            NODE_VERSION=20.9.0
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
