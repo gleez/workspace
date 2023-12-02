@@ -1,4 +1,4 @@
-FROM buildpack-deps:22.04-curl
+FROM buildpack-deps:23.04-curl
 
 ARG NODE_VERSION
 ARG GO_VERSION
@@ -6,6 +6,7 @@ ARG RELEASE_TAG
 
 ### base ###
 RUN apt-get update && apt-get install -y --no-install-recommends \
+        cmake \
         zip \
         unzip \
         bash-completion \
@@ -39,6 +40,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         openssh-server \
         mysql-server \
         mysql-client \
+        postgresql-client \
         net-tools \
         dnsutils \
         tzdata \
