@@ -50,6 +50,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libclang-dev \
         clang \
         cargo \
+        kmod \
+        net-tools \
+        iproute2 \
         libssl-dev \
         pkg-config \
     && locale-gen en_US.UTF-8
