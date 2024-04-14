@@ -1,4 +1,4 @@
-FROM buildpack-deps:22.04-curl
+FROM buildpack-deps:jammy@sha256:f028439d1e21418883b8ea83670b1bb142aae932caa17602f4542cd33cb85094
 
 ARG NODE_VERSION
 ARG GO_VERSION
@@ -69,7 +69,7 @@ RUN upgrade-packages
 RUN add-apt-repository -y ppa:git-core/ppa
 # https://github.com/git-lfs/git-lfs/blob/main/INSTALLING.md
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
-RUN install-packages git git-lfs
+RUN apt-get install -y --no-install-recommends git git-lfs
 
 # Downloading the latest VSC Server release and extracting the release archive
 # Rename `openvscode-server` cli tool to `code` for convenience
