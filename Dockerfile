@@ -63,7 +63,7 @@ ARG RELEASE_ORG="gitpod-io"
 ARG OPENVSCODE_SERVER_ROOT="/home/.openvscode-server"
 
 ### Update and upgrade the base image ###
-RUN upgrade-packages
+# RUN upgrade-packages
 
 ### Git ###
 RUN add-apt-repository -y ppa:git-core/ppa
