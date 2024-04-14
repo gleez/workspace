@@ -63,13 +63,17 @@ ARG RELEASE_ORG="gitpod-io"
 ARG OPENVSCODE_SERVER_ROOT="/home/.openvscode-server"
 
 ### Update and upgrade the base image ###
-# RUN upgrade-packages
+RUN apt upgrade -y
 
 ### Git ###
 RUN add-apt-repository -y ppa:git-core/ppa
 # https://github.com/git-lfs/git-lfs/blob/main/INSTALLING.md
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
-RUN apt-get install -y --no-install-recommends git git-lfs
+RUN apt-get update && apt-get install -y --no-install-recommends git git-lfs
+
+### Python 3.11 ###
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get update && apt-get install -y python3.11
 
 # Downloading the latest VSC Server release and extracting the release archive
 # Rename `openvscode-server` cli tool to `code` for convenience
