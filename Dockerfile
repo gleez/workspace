@@ -62,6 +62,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ARG RELEASE_ORG="gitpod-io"
 ARG OPENVSCODE_SERVER_ROOT="/home/.openvscode-server"
 
+### Update and upgrade the base image ###
+RUN upgrade-packages
+
+### Git ###
+RUN add-apt-repository -y ppa:git-core/ppa
+# https://github.com/git-lfs/git-lfs/blob/main/INSTALLING.md
+RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
+RUN install-packages git git-lfs
+
 # Downloading the latest VSC Server release and extracting the release archive
 # Rename `openvscode-server` cli tool to `code` for convenience
 RUN if [ -z "${RELEASE_TAG}" ]; then \
@@ -120,6 +129,9 @@ RUN mkdir -p /home/gleez/.ssh \
  && chown -R gleez:gleez /workspace \
  && mkdir -p /var/run/watchman/gleez-state \
  && chown -R gleez:gleez /var/run/watchman/gleez-state
+
+# configure git-lfs
+RUN git lfs install --system --skip-repo
 
 ### Gleez user (2) ###
 USER gleez
