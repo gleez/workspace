@@ -73,7 +73,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends git git-lfs
 
 ### Python 3.11 ###
 RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt-get update && apt-get install -y python3.11
+RUN apt-get update && apt-get install -y python3.11-full
 
 # Downloading the latest VSC Server release and extracting the release archive
 # Rename `openvscode-server` cli tool to `code` for convenience
