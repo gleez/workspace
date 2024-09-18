@@ -1,4 +1,4 @@
-FROM buildpack-deps:jammy@sha256:f028439d1e21418883b8ea83670b1bb142aae932caa17602f4542cd33cb85094
+FROM buildpack-deps:jammy@sha256:f94d4ac32b86b5e47c8309b8bde444d2b1ac185c515ee28ff4ebad588b0f21a5
 
 ARG NODE_VERSION
 ARG GO_VERSION
@@ -41,11 +41,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         mysql-server \
         mysql-client \
         postgresql-client \
+        sqlite3 \
         net-tools \
         dnsutils \
         tzdata \
         ca-certificates \
         protobuf-compiler \
+        llm \
         llvm-dev \
         libclang-dev \
         clang \
@@ -54,8 +56,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         net-tools \
         iproute2 \
         libssl-dev \
+        zlib1g-dev \
+        libbz2-dev \
+        libreadline-dev \
+        libsqlite3-dev \
+        libncursesw5-dev \
+        xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
         pkg-config \
         awscli \
+        rlwrap \
     && locale-gen en_US.UTF-8
 
 # ENV LANG=en_US.UTF-8
@@ -197,6 +206,6 @@ ENV LANG=C.UTF-8 \
     PATH=$HOME/.local/bin:/usr/games:/home/workspace/bin:/home/gleez/.deno/bin:$PATH
   
   # Default exposed port if none is specified
-EXPOSE 3000 8080 8081 8082 8083 8084 8085
+EXPOSE 3000 8080 8081 8082 8083 8084 8085 8086 8087
 
 ENTRYPOINT [ "/bin/sh", "-c", "exec ${OPENVSCODE_SERVER_ROOT}/bin/openvscode-server --host 0.0.0.0 \"${@}\"", "--" ]
