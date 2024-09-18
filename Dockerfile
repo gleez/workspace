@@ -34,7 +34,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         zsh \
         libatomic1 \
         git \
-        pip \
+        python3-pip \
         poppler-utils \
         openssh-client \
         openssh-server \
@@ -47,7 +47,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         tzdata \
         ca-certificates \
         protobuf-compiler \
-        llm \
         llvm-dev \
         libclang-dev \
         clang \
