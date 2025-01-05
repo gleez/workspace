@@ -33,6 +33,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         fish \
         zsh \
         libatomic1 \
+        libtool \
         git \
         python3-pip \
         poppler-utils \
@@ -61,6 +62,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libsqlite3-dev \
         libncursesw5-dev \
         xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
+        autoconf automake \
         pkg-config \
         awscli \
         rlwrap \
@@ -80,9 +82,9 @@ RUN add-apt-repository -y ppa:git-core/ppa
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
 RUN apt-get update && apt-get install -y --no-install-recommends git git-lfs
 
-### Python 3.11 ###
+### Python 3.12 ###
 RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt-get update && apt-get install -y python3.11-full
+RUN apt-get update && apt-get install -y python3.12 python3-dev
 
 # Downloading the latest VSC Server release and extracting the release archive
 # Rename `openvscode-server` cli tool to `code` for convenience
