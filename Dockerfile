@@ -87,11 +87,11 @@ RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt-get update && apt-get install -y python3.12 python3-dev
 
 # Install additional python packages
-RUN python3.12 -m pip install --no-cache-dir --upgrade pip \
-        && pip install --no-cache-dir --upgrade \
-        # Install poetry
-        && curl -sSL https://install.python-poetry.org | python3.12 \
-        && sudo rm -rf /tmp/*
+# RUN python3.12 -m pip install --no-cache-dir --upgrade pip \
+#         && pip install --no-cache-dir --upgrade \
+#         # Install poetry
+#         && curl -sSL https://install.python-poetry.org | python3.12 \
+#         && sudo rm -rf /tmp/*
 
 # Downloading the latest VSC Server release and extracting the release archive
 # Rename `openvscode-server` cli tool to `code` for convenience
