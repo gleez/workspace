@@ -1,4 +1,4 @@
-FROM buildpack-deps:jammy@sha256:f94d4ac32b86b5e47c8309b8bde444d2b1ac185c515ee28ff4ebad588b0f21a5
+FROM buildpack-deps:jammy@sha256:1a63cc50ec6f4f45440121af59c47f78ca390607714ac0886c1588d118526b40
 
 ARG NODE_VERSION
 ARG GO_VERSION
@@ -80,11 +80,17 @@ RUN apt upgrade -y
 RUN add-apt-repository -y ppa:git-core/ppa
 # https://github.com/git-lfs/git-lfs/blob/main/INSTALLING.md
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
-RUN apt-get update && apt-get install -y --no-install-recommends git git-lfs
+RUN install-packages git git-lfs
 
 ### Python 3.12 ###
 RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt-get update && apt-get install -y python3.12 python3-dev
+RUN apt-get update && apt-get install -y python3.12 python3-dev \
+        # Install additional python packages
+        && python3.12 -m pip install --no-cache-dir --upgrade pip \
+        && pip install --no-cache-dir --upgrade \
+        # Install poetry
+        && curl -sSL https://install.python-poetry.org | python3.12 \
+        && sudo rm -rf /tmp/*
 
 # Downloading the latest VSC Server release and extracting the release archive
 # Rename `openvscode-server` cli tool to `code` for convenience
