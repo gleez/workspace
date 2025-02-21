@@ -84,9 +84,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends git git-lfs
 
 ### Python 3.12 ###
 RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt-get update && apt-get install -y python3.12 python3-dev \
-        # Install additional python packages
-        && python3.12 -m pip install --no-cache-dir --upgrade pip \
+RUN apt-get update && apt-get install -y python3.12 python3-dev
+
+# Install additional python packages
+RUN python3.12 -m pip install --no-cache-dir --upgrade pip \
         && pip install --no-cache-dir --upgrade \
         # Install poetry
         && curl -sSL https://install.python-poetry.org | python3.12 \
