@@ -118,6 +118,21 @@ ARG USERNAME=gleez
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
+### Remove existing user/group 1000 and create new ones ###
+RUN echo "Checking for existing UID/GID 1000..." && \
+    # Remove any existing user with UID 1000 \
+    existing_user=$(getent passwd 1000 | cut -d: -f1) && \
+    if [ -n "$existing_user" ] && [ "$existing_user" != "$USERNAME" ]; then \
+        echo "Removing existing user: $existing_user" && \
+        userdel -r "$existing_user" 2>/dev/null || echo "Failed to remove user $existing_user"; \
+    fi && \
+    # Remove any existing group with GID 1000 \
+    existing_group=$(getent group 1000 | cut -d: -f1) && \
+    if [ -n "$existing_group" ] && [ "$existing_group" != "$USERNAME" ]; then \
+        echo "Removing existing group: $existing_group" && \
+        groupdel "$existing_group" 2>/dev/null || echo "Failed to remove group $existing_group"; \
+    fi
+    
 ### Gleez user ###
 # '-l': see https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
 RUN groupadd --gid $USER_GID $USERNAME \
