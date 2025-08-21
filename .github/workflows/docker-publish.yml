@@ -81,8 +81,8 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            RELEASE_TAG=openvscode-server-v1.102.3
-            GO_VERSION=1.24.6
+            RELEASE_TAG=openvscode-server-v1.103.1
+            GO_VERSION=1.25.0
             NODE_VERSION=22.18.0
 
       # Sign the resulting Docker image digest except on PRs.
