@@ -1,4 +1,5 @@
-FROM buildpack-deps:jammy@sha256:1a63cc50ec6f4f45440121af59c47f78ca390607714ac0886c1588d118526b40
+# FROM buildpack-deps:jammy@sha256:1a63cc50ec6f4f45440121af59c47f78ca390607714ac0886c1588d118526b40
+FROM buildpack-deps:noble@sha256:sha256:483a31eacca0c4ad239557127ec4eb160f7257fa87c206347282ed4349044441
 
 ARG NODE_VERSION
 ARG GO_VERSION
@@ -39,7 +40,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         poppler-utils \
         openssh-client \
         openssh-server \
-        mysql-server \
         mysql-client \
         postgresql-client \
         sqlite3 \
@@ -64,7 +64,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
         autoconf automake \
         pkg-config \
-        awscli \
+   #     awscli \
         rlwrap \
     && locale-gen en_US.UTF-8
 
@@ -77,14 +77,15 @@ ARG OPENVSCODE_SERVER_ROOT="/home/.openvscode-server"
 RUN apt upgrade -y
 
 ### Git ###
-RUN add-apt-repository -y ppa:git-core/ppa
+#RUN add-apt-repository -y ppa:git-core/ppa
 # https://github.com/git-lfs/git-lfs/blob/main/INSTALLING.md
-RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
+#RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
 RUN apt-get update && apt-get install -y --no-install-recommends git git-lfs
 
 ### Python 3.12 ###
-RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt-get update && apt-get install -y python3.12 python3-dev
+# RUN add-apt-repository ppa:deadsnakes/ppa
+# RUN apt-get update && apt-get install -y python3.12 python3-dev
+RUN apt-get update && apt-get install -y python3 python3-dev python3-pip
 
 # Install additional python packages
 # RUN python3.12 -m pip install --no-cache-dir --upgrade pip \
