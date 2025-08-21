@@ -1,4 +1,3 @@
-# FROM buildpack-deps:jammy@sha256:1a63cc50ec6f4f45440121af59c47f78ca390607714ac0886c1588d118526b40
 FROM buildpack-deps:noble@sha256:483a31eacca0c4ad239557127ec4eb160f7257fa87c206347282ed4349044441
 
 ARG NODE_VERSION
@@ -36,6 +35,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libatomic1 \
         libtool \
         git \
+        git-lfs \
+        python3 \
+        python3-dev \
         python3-pip \
         poppler-utils \
         openssh-client \
@@ -64,7 +66,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
         autoconf automake \
         pkg-config \
-   #     awscli \
         rlwrap \
     && locale-gen en_US.UTF-8
 
@@ -75,24 +76,6 @@ ARG OPENVSCODE_SERVER_ROOT="/home/.openvscode-server"
 
 ### Update and upgrade the base image ###
 RUN apt upgrade -y
-
-### Git ###
-#RUN add-apt-repository -y ppa:git-core/ppa
-# https://github.com/git-lfs/git-lfs/blob/main/INSTALLING.md
-#RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
-RUN apt-get update && apt-get install -y --no-install-recommends git git-lfs
-
-### Python 3.12 ###
-# RUN add-apt-repository ppa:deadsnakes/ppa
-# RUN apt-get update && apt-get install -y python3.12 python3-dev
-RUN apt-get update && apt-get install -y python3 python3-dev python3-pip
-
-# Install additional python packages
-# RUN python3.12 -m pip install --no-cache-dir --upgrade pip \
-#         && pip install --no-cache-dir --upgrade \
-#         # Install poetry
-#         && curl -sSL https://install.python-poetry.org | python3.12 \
-#         && sudo rm -rf /tmp/*
 
 # Downloading the latest VSC Server release and extracting the release archive
 # Rename `openvscode-server` cli tool to `code` for convenience
